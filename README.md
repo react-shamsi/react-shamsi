@@ -1,27 +1,27 @@
-If you are enjoying react-jalali and want to see it improve, please consider giving it a star. Thank you in advance!
+If you are enjoying react-shamsi and want to see it improve, please consider giving it a star. Thank you in advance!
 
-# What is react-jalali?
+# What is react-shamsi?
 
-React-jalali is a set of React components that help you create utilities related to jalali dates such as calendars and date pickers and (coming in a future update) time pickers.
+React-shamsi is a set of React components that help you create utilities related to jalali dates such as calendars and date pickers and (coming in a future update) time pickers.
 
 Demo: https://react-jalali-demo.vercel.app/
 
 ## Installation
 
-`npm install @kasraghoreyshi/calendar`
-`npm install @kasraghoreyshi/datepicker`
+`npm install @react-shamsi/calendar`
+`npm install @react-shamsi/datepicker`
 
 or if using Yarn:
-`yarn add @kasraghoreyshi/calendar`
-`yarn add @kasraghoreyshi/datepicker`
+`yarn add @react-shamsi/calendar`
+`yarn add @react-shamsi/datepicker`
 
 ## Jalali calendar
 
-Let's start by displaying a very simple Jalali calendar using react-jalali. We do it by import the styles and the component itself like so:
+Let's start by displaying a very simple Jalali calendar using react-shamsi. We do it by import the styles and the component itself like so:
 
 ```jsx
-import { Calendar } from "@kasraghoreyshi/calendar";
-import "@kasraghoreyshi/calendar/styles.css";
+import { Calendar } from "@react-shamsi/calendar";
+import "@react-shamsi/calendar/dist/styles.css";
 
 export default function Example() {
   return <Calendar />;
@@ -56,9 +56,9 @@ Now we are going to explore every single prop that could be passed to Calendar.
 Let's start by displaying a very simple Jalali date picker using react-jalali. We do it by import the styles and the component itself like so:
 
 ```jsx
-import { DatePicker } from "@kasraghoreyshi/datepicker";
-import "@kasraghoreyshi/calendar/styles.css";
-import "@kasraghoreyshi/datepicker/styles.css";
+import { DatePicker } from "@react-shamsi/datepicker";
+import "@react-shamsi/calendar/dist/styles.css";
+import "@react-shamsi/datepicker/dist/styles.css";
 
 export default function Example() {
   return <DatePicker />;
