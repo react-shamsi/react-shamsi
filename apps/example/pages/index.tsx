@@ -1,17 +1,63 @@
 import { DatePicker } from "@react-shamsi/datepicker";
-import { useEffect, useState } from "react";
-import styles from "../styles/Home.module.css";
-export default function Home() {
-  const [documentElement, setDocumentElement] = useState<HTMLElement>();
+import { useEffect, useMemo, useState } from "react";
+
+const getTodayWithoutHours = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0);
+  return today;
+};
+
+const getNowWithoutHours = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0);
+  return today;
+};
+
+const NewHomework = () => {
+  const [minDate, setMinDate] = useState<Date>();
+  const minDatePlusOne = useMemo(() => {
+    if (!minDate) return undefined;
+    const minDateClone = new Date(minDate);
+    minDateClone.setDate(minDate.getDate() + 1);
+    console.log("minDate", minDateClone);
+    return minDateClone;
+  }, [minDate]);
+
   useEffect(() => {
-    const portalRoot = document.getElementById("calendar-thing");
-    if (portalRoot) setDocumentElement(portalRoot);
-  }, []);
+    console.log("minDateUseEffect", minDate);
+    if (minDatePlusOne && maxDate && minDate && maxDate <= minDate)
+      setMaxDate(minDatePlusOne);
+  }, [minDate]);
+
+  const [maxDate, setMaxDate] = useState<Date>();
+
   return (
-    <div className={styles.container} id="calendar-thing">
-      <div style={{ width: "20px" }}>
-        <DatePicker calendarPortalElement={documentElement} />
-      </div>
+    <div>
+      <DatePicker
+        className="w-full lg:w-auto p-2 rounded-xl border border-gray-300"
+        placeholder="تاریخ شروع"
+        calendarProps={{
+          minDate: getTodayWithoutHours(),
+          defaultActiveDate: minDate || getNowWithoutHours(),
+        }}
+        onChange={setMinDate}
+        autoUpdate
+        persianDigits
+      />
+      <h1 className="text-lg hidden lg:block">تا</h1>
+      <DatePicker
+        className="w-full lg:w-auto p-2 rounded-xl border border-gray-300"
+        placeholder="تاریخ پایان"
+        calendarProps={{
+          minDate: minDatePlusOne || getTodayWithoutHours(),
+        }}
+        date={maxDate}
+        onChange={setMaxDate}
+        autoUpdate
+        persianDigits
+      />
     </div>
   );
-}
+};
+
+export default NewHomework;

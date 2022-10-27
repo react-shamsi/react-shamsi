@@ -1,6 +1,8 @@
 import classNames from "classnames";
 import {
   getDate,
+  isAfter,
+  isBefore,
   isFriday,
   isSameDay,
   isSameMonth,
@@ -72,8 +74,8 @@ const MainBody = ({
       <div className="grid grid-cols-7 gap-4">
         {selectedDateDays.map((day, index) => {
           const isDateInvalid =
-            (minDate && day < minDate) ||
-            (maxDate && day > maxDate) ||
+            (minDate && isBefore(day, minDate) && !isSameDay(day, minDate)) ||
+            (maxDate && isAfter(day, maxDate) && !isSameDay(day, maxDate)) ||
             disabledDates?.includes(day);
 
           const textColor = () => {
