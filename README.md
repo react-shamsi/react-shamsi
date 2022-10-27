@@ -88,6 +88,9 @@ Design credit goes to https://dribbble.com/eanlami for their awesome design: htt
 - Time Picker
 - Ranged dates
 
+## React-shamsi is used in:
+Horoofun - https://horoofun.ir
+
 ## Issues and contribution
 
 Every single issue is welcomed and so is every contribution. I would be glad to hear your suggestions/requests for future updates.
