@@ -4,6 +4,7 @@ import {
   shift,
   useFloating,
 } from "@floating-ui/react-dom";
+import { FloatingPortal } from "@floating-ui/react-dom-interactions";
 import { useClickOutside } from "@mantine/hooks";
 import { Calendar, ICalendarProps } from "@react-shamsi/calendar";
 import { format } from "date-fns-jalali";
@@ -23,6 +24,7 @@ interface IDatePickerProps
   date?: Date;
   dateFormat?: string;
   persianDigits?: boolean;
+  calendarPortalElement?: HTMLElement | null;
 }
 
 export const DatePicker = ({
@@ -33,6 +35,7 @@ export const DatePicker = ({
   dateFormat = "yyyy/MM/dd",
   date: controlledDate,
   persianDigits,
+  calendarPortalElement,
   ...props
 }: IDatePickerProps) => {
   const { x, y, reference, floating, strategy } = useFloating({
@@ -65,6 +68,30 @@ export const DatePicker = ({
     setDate(controlledDate);
   }, [controlledDate]);
 
+  const CalendarComponent = (
+    <Calendar
+      activeDate={date}
+      onChange={(newDate) => autoUpdate && updateDateHandler(newDate)}
+      ref={(el) => {
+        floating(el);
+        setCalendarRef(el);
+      }}
+      style={{
+        //@ts-ignore
+        position: strategy,
+        top: y ?? 0,
+        left: x ?? 0,
+      }}
+      showFooter
+      onConfirm={(newDate) => {
+        updateDateHandler(newDate);
+        setIsOpen(false);
+      }}
+      onCancel={() => setIsOpen(false)}
+      {...calendarProps}
+    />
+  );
+
   return (
     <>
       <div ref={setInputRef}>
@@ -88,28 +115,12 @@ export const DatePicker = ({
           {...props}
         />
       </div>
-      {isOpen && (
-        <Calendar
-          activeDate={date}
-          onChange={(newDate) => autoUpdate && updateDateHandler(newDate)}
-          ref={(el) => {
-            floating(el);
-            setCalendarRef(el);
-          }}
-          style={{
-            //@ts-ignore
-            position: strategy,
-            top: y ?? 0,
-            left: x ?? 0,
-          }}
-          showFooter
-          onConfirm={(newDate) => {
-            updateDateHandler(newDate);
-            setIsOpen(false);
-          }}
-          onCancel={() => setIsOpen(false)}
-          {...calendarProps}
-        />
+      {calendarPortalElement ? (
+        <FloatingPortal root={calendarPortalElement}>
+          {isOpen && CalendarComponent}
+        </FloatingPortal>
+      ) : (
+        isOpen && CalendarComponent
       )}
     </>
   );

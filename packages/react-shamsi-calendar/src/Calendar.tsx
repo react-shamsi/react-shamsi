@@ -166,7 +166,9 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
     }, [propActiveDate]);
 
     const goToTodayHandler = () => {
-      setActiveDate(new Date());
+      const todayWithoutHours = new Date();
+      todayWithoutHours.setHours(0, 0, 0);
+      setActiveDate(todayWithoutHours);
     };
 
     const activeDayChangeHandler = (day: Date) => {
