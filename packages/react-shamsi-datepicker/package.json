@@ -1,0 +1,44 @@
+{
+  "name": "@react-shamsi/datepicker",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "license": "MIT",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts --external react && tailwindcss -i ./src/styles.css -o ./dist/styles.css",
+    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
+    "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+  },
+  "devDependencies": {
+    "@react-shamsi/tsconfig": "*",
+    "@tabler/icons": "^1.108.0",
+    "@types/react": "^18.0.23",
+    "@types/react-dom": "^18.0.7",
+    "@types/react-transition-group": "^4.4.5",
+    "autoprefixer": "^10.4.12",
+    "eslint": "^8.26.0",
+    "eslint-config-react-shamsi": "*",
+    "postcss": "^8.4.18",
+    "react": "^18.2.0",
+    "tailwindcss": "^3.2.1",
+    "tsup": "^6.3.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@floating-ui/react-dom": "^1.0.0",
+    "@mantine/hooks": "^5.6.2",
+    "@react-shamsi/calendar": "*",
+    "classnames": "^2.3.2",
+    "date-fns-jalali": "^2.29.3-0",
+    "persian-helpers": "^0.1.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
