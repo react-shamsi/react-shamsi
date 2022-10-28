@@ -294,7 +294,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
               backgroundColor: "#1c1917",
               amPmActiveBackgroundColor: "#3b82f6",
               amPmColor: "#fff",
-              clockBackgroundColor: "#0c4a6e",
+              clockBackgroundColor: "#000",
               clockLabelsColor: "#fff",
               pointerBackgroundColor: "#38bdf8",
             },
@@ -320,11 +320,11 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
             offDaysSelectedColor: "#fee2e2",
             clock: {
               backgroundColor: "#1c1917",
-              amPmActiveBackgroundColor: "#3b82f6",
+              amPmActiveBackgroundColor: "#f43f5e",
               amPmColor: "#fff",
-              clockBackgroundColor: "#0c4a6e",
+              clockBackgroundColor: "#000",
               clockLabelsColor: "#fff",
-              pointerBackgroundColor: "#38bdf8",
+              pointerBackgroundColor: "#fb7185",
             },
           };
         default:

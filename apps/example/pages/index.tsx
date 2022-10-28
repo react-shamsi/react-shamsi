@@ -40,7 +40,7 @@ const NewHomework = () => {
         calendarProps={{
           minDate: getTodayWithoutHours(),
           presistTimeOnDateChange: true,
-          theme: "dark",
+          theme: "darkRed",
           defaultActiveDate: minDate || getNowWithoutHours(),
         }}
         onChange={setMinDate}
