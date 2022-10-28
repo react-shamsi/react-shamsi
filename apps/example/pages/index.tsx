@@ -32,12 +32,15 @@ const NewHomework = () => {
   const [maxDate, setMaxDate] = useState<Date>();
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
+      {/* <Calendar showFooter /> */}
       <DatePicker
         className="w-full lg:w-auto p-2 rounded-xl border border-gray-300"
         placeholder="تاریخ شروع"
         calendarProps={{
           minDate: getTodayWithoutHours(),
+          presistTimeOnDateChange: true,
+          theme: "dark",
           defaultActiveDate: minDate || getNowWithoutHours(),
         }}
         onChange={setMinDate}
@@ -50,6 +53,8 @@ const NewHomework = () => {
         placeholder="تاریخ پایان"
         calendarProps={{
           minDate: minDatePlusOne || getTodayWithoutHours(),
+          showTimePicker: false,
+          presistTimeOnDateChange: true,
         }}
         date={maxDate}
         onChange={setMaxDate}

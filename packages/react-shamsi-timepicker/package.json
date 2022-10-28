@@ -1,5 +1,5 @@
 {
-  "name": "@react-shamsi/calendar",
+  "name": "@react-shamsi/timepicker",
   "version": "0.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "tsup src/index.tsx --format esm,cjs --dts --external react && tailwindcss -i ./src/styles.css -o ./dist/styles.css",
-    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react && tailwindcss -i ./src/styles.css -o ./dist/styles.css",
+    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
@@ -31,12 +31,12 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.3",
+    "@floating-ui/react-dom": "^1.0.0",
+    "@floating-ui/react-dom-interactions": "^0.10.2",
+    "@mantine/hooks": "^5.6.2",
     "classnames": "^2.3.2",
     "date-fns-jalali": "^2.29.3-0",
-    "persian-helpers": "^0.1.2",
-    "react-transition-group": "^4.4.5",
-    "@react-shamsi/timepicker": "*"
+    "persian-helpers": "^0.1.2"
   },
   "publishConfig": {
     "access": "public"

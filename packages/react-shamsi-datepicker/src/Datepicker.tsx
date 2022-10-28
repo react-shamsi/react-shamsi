@@ -32,7 +32,7 @@ export const DatePicker = ({
   calendarProps,
   onChange,
   defaultDate,
-  dateFormat = "yyyy/MM/dd",
+  dateFormat = "yyyy/MM/dd hh:mm:ss aaa",
   date: controlledDate,
   persianDigits,
   calendarPortalElement,

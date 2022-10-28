@@ -1,3 +1,8 @@
+import {
+  defaultTimePickerTheme,
+  TimePicker,
+  TTimePickerTheme,
+} from "@react-shamsi/timepicker";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons";
 import classNames from "classnames";
 import {
@@ -11,14 +16,13 @@ import {
 import { convertDigits } from "persian-helpers";
 import { forwardRef, useEffect, useMemo, useState } from "react";
 import { SwitchTransition, Transition } from "react-transition-group";
-import "vazirmatn/misc/UI/Vazirmatn-UI-font-face.css";
+
 import Footer from "./Footer";
 import Header from "./Header";
 import MainBody from "./MainBody";
 import MonthsBody from "./MonthsBody";
 import { cloneDate } from "./utils/cloneDate";
 import YearsBody from "./YearsBody";
-
 export type TThemeClasses = {
   headerBackgroundColor: string;
   headerTextColor: string;
@@ -37,7 +41,10 @@ export type TThemeClasses = {
   offDaysSelectedColor: string;
   footerBackgroundColor: string;
   footerButtonColor: string;
+  clock: TTimePickerTheme;
 };
+
+export type CalendarModes = "date" | "time";
 
 type TCalendarThemes = "dark" | "darkRed" | "light" | TThemeClasses;
 
@@ -55,7 +62,9 @@ export interface ICalendarProps {
   disableTransitions?: boolean;
   bodyTransition?: "zoomIn" | "zoomOut" | "fade";
   showFridaysAsRed?: boolean;
+  showTimePicker?: boolean;
   months?: string[];
+  presistTimeOnDateChange?: boolean;
   style?: React.StyleHTMLAttributes<HTMLDivElement>;
   onConfirm?: (newDate: Date) => void;
   onCancel?: () => void;
@@ -134,6 +143,8 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
       bodyTransition = "zoomIn",
       style,
       showFridaysAsRed = true,
+      showTimePicker = true,
+      presistTimeOnDateChange = false,
       months = [
         "فروردین",
         "اردیبهشت",
@@ -160,19 +171,36 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
     const [activeBody, setActiveBody] = useState<"main" | "months" | "years">(
       "main"
     );
+    const [mode, setMode] = useState<CalendarModes>("date");
+    const [hour, setHour] = useState(
+      propActiveDate?.getHours() || defaultActiveDate?.getHours() || 0
+    );
+    const [minute, setMinute] = useState(
+      propActiveDate?.getMinutes() || defaultActiveDate?.getMinutes() || 0
+    );
 
     useEffect(() => {
       if (propActiveDate) setActiveDate(activeDate);
     }, [propActiveDate]);
 
-    const goToTodayHandler = () => {
-      const todayWithoutHours = new Date();
-      todayWithoutHours.setHours(0, 0, 0);
-      setActiveDate(todayWithoutHours);
-    };
+    useEffect(() => {
+      setActiveDate((previousActiveDate) => {
+        const previousActiveDateCopy = new Date(previousActiveDate);
+        previousActiveDateCopy.setHours(hour, minute, 0, 0);
+        return previousActiveDateCopy;
+      });
+    }, [hour, minute]);
 
     const activeDayChangeHandler = (day: Date) => {
-      setActiveDate(day);
+      const dayCopy = new Date(day);
+      if (presistTimeOnDateChange) {
+        dayCopy.setHours(hour, minute, 0, 0);
+      } else dayCopy.setHours(0, 0, 0);
+      setActiveDate(dayCopy);
+    };
+
+    const goToTodayHandler = () => {
+      activeDayChangeHandler(new Date());
     };
 
     const nextMonthHandler = () => {
@@ -241,6 +269,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
             headerTextColor: "#fff",
             offDaysColor: "#ef4444",
             offDaysSelectedColor: "#fee2e2",
+            clock: defaultTimePickerTheme,
           };
         case "dark":
           return {
@@ -261,6 +290,14 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
             headerTextColor: "#fff",
             offDaysColor: "#ef4444",
             offDaysSelectedColor: "#fee2e2",
+            clock: {
+              backgroundColor: "#1c1917",
+              amPmActiveBackgroundColor: "#3b82f6",
+              amPmColor: "#fff",
+              clockBackgroundColor: "#0c4a6e",
+              clockLabelsColor: "#fff",
+              pointerBackgroundColor: "#38bdf8",
+            },
           };
         case "darkRed":
           return {
@@ -281,6 +318,14 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
             headerTextColor: "#fff",
             offDaysColor: "#ef4444",
             offDaysSelectedColor: "#fee2e2",
+            clock: {
+              backgroundColor: "#1c1917",
+              amPmActiveBackgroundColor: "#3b82f6",
+              amPmColor: "#fff",
+              clockBackgroundColor: "#0c4a6e",
+              clockLabelsColor: "#fff",
+              pointerBackgroundColor: "#38bdf8",
+            },
           };
         default:
           return theme;
@@ -338,8 +383,8 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
     return (
       <div
         ref={ref}
-        style={style}
-        className="flex flex-col rounded-md shadow-lg font-vazirmatn max-w-[22rem] overflow-hidden"
+        style={{ fontFamily: "Vazirmatn", ...style }}
+        className="flex flex-col rounded-md shadow-lg max-w-[22rem] overflow-hidden"
         dir="rtl"
       >
         <Header
@@ -350,56 +395,69 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
           months={months}
           themeClasses={themeClasses}
         />
-        <div
-          style={{ backgroundColor: themeClasses.bodyBackgroundColor }}
-          className={classNames("p-4 flex flex-col items-center space-y-6")}
-        >
-          <div className="flex items-center justify-between text-gray-500 w-full">
-            <button
-              onClick={previousMonthHandler}
-              style={{ color: themeClasses.chevronRightColor }}
-            >
-              <IconChevronRight className="w-4 h-4" />
-            </button>
-            <button
-              className="text-base"
-              onClick={cycleThroughBodies}
-              style={{ color: themeClasses.topBarTextColor }}
-            >
-              {activeBody === "main" && months[getMonth(selectedDate)]}{" "}
-              {convertDigits(format(selectedDate, "yyyy"))}
-            </button>
-            <button
-              onClick={nextMonthHandler}
-              style={{ color: themeClasses.chevronLeftColor }}
-            >
-              <IconChevronLeft className="w-4 h-4" />
-            </button>
-          </div>
-          {disableTransitions ? (
-            Body
-          ) : (
-            <div className="relative">
-              <SwitchTransition mode="in-out">
-                <FadeTransition
-                  bodyTransition={bodyTransition}
-                  key={activeBody}
-                  timeout={200}
-                  unmountOnExit
-                  mountOnEnter
-                >
-                  {Body}
-                </FadeTransition>
-              </SwitchTransition>
+        {mode === "date" ? (
+          <div
+            style={{ backgroundColor: themeClasses.bodyBackgroundColor }}
+            className={classNames("p-4 flex flex-col items-center space-y-6")}
+          >
+            <div className="flex items-center justify-between text-gray-500 w-full">
+              <button
+                onClick={previousMonthHandler}
+                style={{ color: themeClasses.chevronRightColor }}
+              >
+                <IconChevronRight className="w-4 h-4" />
+              </button>
+              <button
+                className="text-base"
+                onClick={cycleThroughBodies}
+                style={{ color: themeClasses.topBarTextColor }}
+              >
+                {activeBody === "main" && months[getMonth(selectedDate)]}{" "}
+                {convertDigits(format(selectedDate, "yyyy"))}
+              </button>
+              <button
+                onClick={nextMonthHandler}
+                style={{ color: themeClasses.chevronLeftColor }}
+              >
+                <IconChevronLeft className="w-4 h-4" />
+              </button>
             </div>
-          )}
-        </div>
-
+            {disableTransitions ? (
+              Body
+            ) : (
+              <div className="relative">
+                <SwitchTransition mode="in-out">
+                  <FadeTransition
+                    bodyTransition={bodyTransition}
+                    key={activeBody}
+                    timeout={200}
+                    unmountOnExit
+                    mountOnEnter
+                  >
+                    {Body}
+                  </FadeTransition>
+                </SwitchTransition>
+              </div>
+            )}
+          </div>
+        ) : (
+          <TimePicker
+            onChange={(hour, minute) => {
+              setHour(hour);
+              setMinute(minute);
+              setMode("date");
+            }}
+            theme={themeClasses.clock}
+          />
+        )}
         {showFooter && (
           <Footer
             themeClasses={themeClasses}
             onConfirm={() => onConfirm?.(activeDate)}
             onCancel={onCancel}
+            showTimePicker={showTimePicker}
+            mode={mode}
+            onChangeMode={setMode}
           />
         )}
       </div>

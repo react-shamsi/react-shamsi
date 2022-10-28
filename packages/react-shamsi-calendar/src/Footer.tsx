@@ -1,12 +1,23 @@
+import { IconCalendar, IconClock } from "@tabler/icons";
 import classNames from "classnames";
-import { TThemeClasses } from ".";
+import { CalendarModes, TThemeClasses } from ".";
 
 interface IFooterProps {
   themeClasses: TThemeClasses;
+  mode: CalendarModes;
+  showTimePicker?: boolean;
   onConfirm?: () => void;
   onCancel?: () => void;
+  onChangeMode?: (mode: CalendarModes) => void;
 }
-const Footer = ({ themeClasses, onCancel, onConfirm }: IFooterProps) => {
+const Footer = ({
+  themeClasses,
+  onCancel,
+  mode,
+  onChangeMode,
+  onConfirm,
+  showTimePicker,
+}: IFooterProps) => {
   return (
     <div
       style={{
@@ -19,9 +30,18 @@ const Footer = ({ themeClasses, onCancel, onConfirm }: IFooterProps) => {
         تایید
       </button>
       <button onClick={onCancel}>انصراف</button>
-      {/* <button className="mr-auto">
-        <IconClock className="w-5 h-5" />
-      </button> */}
+      {showTimePicker && (
+        <button
+          className="mr-auto"
+          onClick={() => onChangeMode?.(mode === "date" ? "time" : "date")}
+        >
+          {mode === "date" ? (
+            <IconClock className="w-5 h-5" />
+          ) : (
+            <IconCalendar className="w-5 h-5" />
+          )}
+        </button>
+      )}
     </div>
   );
 };
