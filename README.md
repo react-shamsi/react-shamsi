@@ -22,6 +22,8 @@ Let's start by displaying a very simple Jalali calendar using react-shamsi. We d
 ```jsx
 import { Calendar } from "@react-shamsi/calendar";
 import "@react-shamsi/calendar/dist/styles.css";
+// If you want to use the time picker
+import "@react-shamsi/timepicker/dist/styles.css";
 
 export default function Example() {
   return <Calendar />;
@@ -59,6 +61,8 @@ Let's start by displaying a very simple Jalali date picker using react-jalali. W
 import { DatePicker } from "@react-shamsi/datepicker";
 import "@react-shamsi/calendar/dist/styles.css";
 import "@react-shamsi/datepicker/dist/styles.css";
+// If you want to use the time picker
+import "@react-shamsi/timepicker/dist/styles.css";
 
 export default function Example() {
   return <DatePicker />;

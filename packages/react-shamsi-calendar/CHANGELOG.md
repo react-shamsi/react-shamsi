@@ -1,5 +1,11 @@
 # @react-shamsi/calendar
 
+## 0.1.1
+
+### Patch Changes
+
+- f25ad6c: Update clock theme
+
 ## 0.1.0
 
 ### Minor Changes
