@@ -57,7 +57,7 @@ export const TimePicker = ({
   const currentTimes = useMemo(() => (hour ? minutes : hours), [minute, hour]);
 
   useEffect(() => {
-    if (hour && minute) onChange?.(hour, minute);
+    if (hour !== undefined && minute !== undefined) onChange?.(hour, minute);
   }, [hour, minute]);
 
   useEffect(() => {
