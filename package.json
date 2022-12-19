@@ -15,7 +15,7 @@
     "release": "turbo run build && changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.22.0",
+    "@changesets/cli": "^2.26.0",
     "eslint": "^7.32.0",
     "eslint-config-react-shamsi": "*",
     "prettier": "^2.5.1",
