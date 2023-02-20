@@ -19,7 +19,7 @@
     "@react-shamsi/tsconfig": "*",
     "@tabler/icons": "^1.108.0",
     "@types/react": "^18.0.23",
-    "@types/react-dom": "^18.0.7",
+    "@types/react-dom": "^18.0.11",
     "@types/react-transition-group": "^4.4.5",
     "autoprefixer": "^10.4.12",
     "eslint": "^8.26.0",
