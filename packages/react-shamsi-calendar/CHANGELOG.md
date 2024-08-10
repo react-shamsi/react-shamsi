@@ -1,5 +1,16 @@
 # @react-shamsi/calendar
 
+## 0.2.0
+
+### Minor Changes
+
+- d973461: Add experimental_ranged
+
+### Patch Changes
+
+- Updated dependencies [d973461]
+  - @react-shamsi/timepicker@0.1.0
+
 ## 0.1.1
 
 ### Patch Changes
