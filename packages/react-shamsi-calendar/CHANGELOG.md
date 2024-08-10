@@ -1,5 +1,13 @@
 # @react-shamsi/calendar
 
+## 0.2.1
+
+### Patch Changes
+
+- Fix button types
+- Updated dependencies
+  - @react-shamsi/timepicker@0.1.1
+
 ## 0.2.0
 
 ### Minor Changes

@@ -26,12 +26,15 @@ const Footer = ({
       }}
       className={classNames("w-full p-6 flex items-center")}
     >
-      <button onClick={onConfirm} className="ml-6">
+      <button type="button" onClick={onConfirm} className="ml-6">
         تایید
       </button>
-      <button onClick={onCancel}>انصراف</button>
+      <button type="button" onClick={onCancel}>
+        انصراف
+      </button>
       {showTimePicker && (
         <button
+          type="button"
           className="mr-auto"
           onClick={() => onChangeMode?.(mode === "date" ? "time" : "date")}
         >

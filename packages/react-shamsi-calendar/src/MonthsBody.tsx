@@ -18,6 +18,7 @@ const MonthsBody = ({
     <div className="grid grid-cols-3 gap-4">
       {months.map((month, index) => (
         <button
+          type="button"
           onClick={() => onChangeMonth(index)}
           key={month}
           style={{

@@ -39,6 +39,7 @@ const YearsBody = ({
     <div className="grid grid-cols-3 gap-4 max-h-72 overflow-y-scroll custom-scroll">
       {years.map((year, index) => (
         <button
+          type="button"
           ref={year === getYear(selectedDate) ? currentYearRef : otherYearsRef}
           onClick={() => onChangeYear(year)}
           key={year}

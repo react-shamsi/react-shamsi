@@ -116,6 +116,7 @@ export const TimePicker = ({
               }}
             >
               <button
+                type="button"
                 onMouseEnter={() => setCurrentHoverIndex(index)}
                 onMouseLeave={() => setCurrentHoverIndex(undefined)}
                 className="inline-block w-8 h-8 pointer-events-auto rounded-full"

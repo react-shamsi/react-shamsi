@@ -214,6 +214,7 @@ const MainBody = ({
                 ></div>
               )}
               <button
+                type="button"
                 disabled={isDateInvalid}
                 onClick={onActiveDayChange.bind(this, day)}
                 key={day.toString()}

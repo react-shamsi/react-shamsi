@@ -9,6 +9,7 @@ const AmPmButton = ({
 }: PropsWithChildren<IAmPmButtonProps>) => {
   return (
     <button
+      type="button"
       className={classNames("p-2 text-xs rounded-full", className)}
       {...props}
     >

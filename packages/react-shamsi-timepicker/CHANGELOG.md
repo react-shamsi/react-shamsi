@@ -1,5 +1,11 @@
 # @react-shamsi/timepicker
 
+## 0.1.1
+
+### Patch Changes
+
+- Fix button types
+
 ## 0.1.0
 
 ### Minor Changes

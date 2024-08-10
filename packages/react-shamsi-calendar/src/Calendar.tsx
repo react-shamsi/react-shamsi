@@ -440,12 +440,14 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
           >
             <div className="flex items-center justify-between text-gray-500 w-full">
               <button
+                type="button"
                 onClick={previousMonthHandler}
                 style={{ color: themeClasses.chevronRightColor }}
               >
                 <IconChevronRight className="w-4 h-4" />
               </button>
               <button
+                type="button"
                 className="text-base"
                 onClick={cycleThroughBodies}
                 style={{ color: themeClasses.topBarTextColor }}
@@ -454,6 +456,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
                 {convertDigits(format(selectedDate, "yyyy"))}
               </button>
               <button
+                type="button"
                 onClick={nextMonthHandler}
                 style={{ color: themeClasses.chevronLeftColor }}
               >

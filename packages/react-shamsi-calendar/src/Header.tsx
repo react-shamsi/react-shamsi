@@ -85,6 +85,7 @@ const Header = ({
 
       {!isRanged && showGoToToday && !isToday(selectedDate) && (
         <button
+          type="button"
           onClick={onGoToToday}
           className="px-4 py-2 rounded-md bg-white text-black mr-auto text-sm"
         >
