@@ -1,5 +1,5 @@
 import { DatePicker } from "@react-shamsi/datepicker";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
 const getTodayWithoutHours = () => {
   const today = new Date();
@@ -14,54 +14,33 @@ const getNowWithoutHours = () => {
 };
 
 const NewHomework = () => {
-  const [minDate, setMinDate] = useState<Date>();
-  const minDatePlusOne = useMemo(() => {
-    if (!minDate) return undefined;
-    const minDateClone = new Date(minDate);
-    minDateClone.setDate(minDate.getDate() + 1);
-    console.log("minDate", minDateClone);
-    return minDateClone;
-  }, [minDate]);
-
-  useEffect(() => {
-    console.log("minDateUseEffect", minDate);
-    if (minDatePlusOne && maxDate && minDate && maxDate <= minDate)
-      setMaxDate(minDatePlusOne);
-  }, [minDate]);
-
-  const [maxDate, setMaxDate] = useState<Date>();
+  const [range, setRange] = useState<[Date, Date]>([
+    new Date(),
+    new Date("2024-08-15T20:30:00.000Z"),
+  ]);
 
   return (
-    <div style={{ padding: "20px" }}>
-      {/* <Calendar showFooter /> */}
+    <>
+      {/* <Calendar
+        ranged
+        theme={"dark"}
+        onChange={() => {}}
+        showTimePicker
+        showFooter
+      /> */}
       <DatePicker
         className="w-full lg:w-auto p-2 rounded-xl border border-gray-300"
         placeholder="تاریخ شروع"
-        calendarProps={{
-          minDate: getTodayWithoutHours(),
-          presistTimeOnDateChange: true,
-          theme: "darkRed",
-          defaultActiveDate: minDate || getNowWithoutHours(),
+        date={range}
+        onChange={(from, to) => {
+          setRange([from!, to!]);
         }}
-        onChange={setMinDate}
-        autoUpdate
+        dateFormat="dd LLLL"
         persianDigits
+        dir="rtl"
+        experimental_ranged
       />
-      <h1 className="text-lg hidden lg:block">تا</h1>
-      <DatePicker
-        className="w-full lg:w-auto p-2 rounded-xl border border-gray-300"
-        placeholder="تاریخ پایان"
-        calendarProps={{
-          minDate: minDatePlusOne || getTodayWithoutHours(),
-          showTimePicker: false,
-          presistTimeOnDateChange: true,
-        }}
-        date={maxDate}
-        onChange={setMaxDate}
-        autoUpdate
-        persianDigits
-      />
-    </div>
+    </>
   );
 };
 

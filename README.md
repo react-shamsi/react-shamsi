@@ -81,7 +81,10 @@ Now we are going to explore every single prop that could be passed to DatePicker
 |dateFormat| The format that the date will be displayed in | "yyyy/MM/dd" |
 |onChange|Function that gets called whenever the user selects a date. The new date will be passed as it's argument| n/a |
 |persianDigits|Will convert the input's date to persian digits|false|
+|experimental_ranged|Will enable ranged (!!READ THE NOTE BELOW!!)|false|
 |...Input element props| Every other prop that can be passed to an input can be also passed to this component.| n/a |
+
+NOTE: "experimental_ranged" is, as the name suggests, highly experimental and is still being developed. It is eventually going to be stable but as of now, use with caution
 
 ## Credits
 
@@ -93,6 +96,7 @@ Design credit goes to https://dribbble.com/eanlami for their awesome design: htt
 - Ranged dates
 
 ## React-shamsi is used in:
+
 Horoofun - https://horoofun.ir
 
 ## Issues and contribution

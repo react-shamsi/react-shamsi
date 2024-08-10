@@ -1,3 +1,4 @@
+import { useDebouncedValue } from "@mantine/hooks";
 import classNames from "classnames";
 import { convertDigits } from "persian-helpers";
 import { useEffect, useMemo, useState } from "react";
@@ -51,6 +52,7 @@ export const TimePicker = ({
   theme = defaultTimePickerTheme,
 }: ITimePickerProps) => {
   const [currentHoverIndex, setCurrentHoverIndex] = useState<number>();
+  const [debouncedCurrentHoverIndex] = useDebouncedValue(currentHoverIndex, 10);
   const [hour, setHour] = useState<number>();
   const [minute, setMinute] = useState<number>();
   const [isAm, setIsAm] = useState(true);
@@ -85,13 +87,13 @@ export const TimePicker = ({
           className="w-2 h-2 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-full"
           style={{ backgroundColor: theme.pointerBackgroundColor }}
         ></div>
-        {currentHoverIndex !== undefined && (
+        {debouncedCurrentHoverIndex !== undefined && (
           <>
             <div
               className="absolute h-[40%] w-0.5 top-[10%] origin-bottom left-1/2 -translate-x-1/2"
               style={{
                 transform: `rotate(${getDegrees(
-                  currentHoverIndex,
+                  debouncedCurrentHoverIndex,
                   currentTimes
                 )}deg)`,
                 backgroundColor: theme.pointerBackgroundColor,
@@ -106,7 +108,7 @@ export const TimePicker = ({
               key={time}
               className={classNames(
                 "absolute text-center text-lg pointer-events-none",
-                currentHoverIndex === index && "text-white"
+                debouncedCurrentHoverIndex === index && "text-white"
               )}
               style={{
                 transform: `rotate(${degrees}deg)`,
@@ -119,9 +121,12 @@ export const TimePicker = ({
                 className="inline-block w-8 h-8 pointer-events-auto rounded-full"
                 style={{
                   transform: `rotate(-${degrees}deg)`,
-                  color: theme.clockLabelsColor,
+                  color:
+                    debouncedCurrentHoverIndex === index
+                      ? "white"
+                      : theme.clockLabelsColor,
                   backgroundColor:
-                    currentHoverIndex === index
+                    debouncedCurrentHoverIndex === index
                       ? theme.pointerBackgroundColor
                       : "transparent",
                 }}

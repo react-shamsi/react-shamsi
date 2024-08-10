@@ -1,6 +1,6 @@
 import {
-  autoUpdate as floatingUiAutoUpdate,
   flip,
+  autoUpdate as floatingUiAutoUpdate,
   shift,
   useFloating,
 } from "@floating-ui/react-dom";
@@ -12,18 +12,20 @@ import { convertDigits } from "persian-helpers";
 import { useEffect, useState } from "react";
 
 interface DatePickerOnChange {
-  onChange?: (newDate: Date) => void;
+  onChange?: (newDate: Date, fromDate?: Date) => void;
 }
 
 interface IDatePickerProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">,
     DatePickerOnChange {
   autoUpdate?: boolean;
-  defaultDate?: Date;
+  defaultDate?: Date | [Date, Date];
   calendarProps?: ICalendarProps;
-  date?: Date;
+  date?: Date | [Date, Date];
+  to?: Date;
   dateFormat?: string;
   persianDigits?: boolean;
+  experimental_ranged?: boolean;
   calendarPortalElement?: HTMLElement | null;
 }
 
@@ -34,8 +36,10 @@ export const DatePicker = ({
   defaultDate,
   dateFormat = "yyyy/MM/dd hh:mm:ss aaa",
   date: controlledDate,
+  to,
   persianDigits,
   calendarPortalElement,
+  experimental_ranged: ranged,
   ...props
 }: IDatePickerProps) => {
   const { x, y, reference, floating, strategy } = useFloating({
@@ -45,7 +49,16 @@ export const DatePicker = ({
     whileElementsMounted: floatingUiAutoUpdate,
   });
 
-  const [date, setDate] = useState(defaultDate || controlledDate);
+  const rangeToDate = <T extends any>(input: T, get: "from" | "to") =>
+    Array.isArray(input) ? input[get === "from" ? 0 : 1] : input;
+
+  const [date, setDate] = useState(
+    rangeToDate(defaultDate, "to") || rangeToDate(controlledDate, "to")
+  );
+
+  const [fromDate, setFromDate] = useState(
+    rangeToDate(defaultDate, "from") || rangeToDate(controlledDate, "from")
+  );
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -54,9 +67,13 @@ export const DatePicker = ({
 
   useClickOutside(() => setIsOpen(false), null, [calendarRef, inputRef]);
 
-  const updateDateHandler = (newDate: Date) => {
-    if (!controlledDate) setDate(newDate);
-    onChange?.(newDate);
+  const updateDateHandler = (newDate: Date, calendarFromDate?: Date) => {
+    if (!controlledDate) {
+      setDate(newDate);
+      setFromDate(calendarFromDate);
+    }
+    if (ranged && calendarFromDate) onChange?.(calendarFromDate, newDate);
+    else onChange?.(newDate);
   };
 
   const [isMounted, setIsMounted] = useState(false);
@@ -65,13 +82,23 @@ export const DatePicker = ({
 
   useEffect(() => {
     if (!isMounted) return;
-    setDate(controlledDate);
+    setDate(rangeToDate(controlledDate, "to"));
+    if (ranged) setFromDate(rangeToDate(controlledDate, "from"));
   }, [controlledDate]);
 
   const CalendarComponent = (
     <Calendar
-      activeDate={date}
-      onChange={(newDate) => autoUpdate && updateDateHandler(newDate)}
+      ranged={
+        Array.isArray(controlledDate)
+          ? { from: controlledDate[0], to: controlledDate[1] }
+          : ranged
+          ? true
+          : undefined
+      }
+      activeDate={Array.isArray(date) ? date[0] : date}
+      onChange={(newDate, calendarFromDate) =>
+        autoUpdate && updateDateHandler(newDate, calendarFromDate)
+      }
       ref={(el) => {
         floating(el);
         setCalendarRef(el);
@@ -83,8 +110,8 @@ export const DatePicker = ({
         left: x ?? 0,
       }}
       showFooter
-      onConfirm={(newDate) => {
-        updateDateHandler(newDate);
+      onConfirm={(newDate, calendarFromDate) => {
+        updateDateHandler(newDate, calendarFromDate);
         setIsOpen(false);
       }}
       onCancel={() => setIsOpen(false)}
@@ -100,9 +127,15 @@ export const DatePicker = ({
           className="p-2 rounded-md border border-gray-300"
           value={
             date
-              ? convertDigits(format(date, dateFormat), {
+              ? `${
+                  fromDate
+                    ? convertDigits(format(fromDate, dateFormat), {
+                        to: persianDigits ? "fa" : "en",
+                      }) + " - "
+                    : ""
+                } ${convertDigits(format(date, dateFormat), {
                   to: persianDigits ? "fa" : "en",
-                })
+                })}`
               : ""
           }
           readOnly

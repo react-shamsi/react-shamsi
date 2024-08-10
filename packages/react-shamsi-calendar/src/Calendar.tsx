@@ -23,7 +23,11 @@ import MainBody from "./MainBody";
 import MonthsBody from "./MonthsBody";
 import { cloneDate } from "./utils/cloneDate";
 import YearsBody from "./YearsBody";
+
+export type RangedDate = { from?: Date; to?: Date };
+
 export type TThemeClasses = {
+  hoverBackgroundColor: string;
   headerBackgroundColor: string;
   headerTextColor: string;
   chevronRightColor: string;
@@ -50,7 +54,7 @@ type TCalendarThemes = "dark" | "darkRed" | "light" | TThemeClasses;
 
 export interface ICalendarProps {
   highlightToday?: boolean;
-  onChange?: (newDate: Date) => void;
+  onChange?: (newDate: Date, fromDate?: Date) => void;
   activeDate?: Date;
   defaultActiveDate?: Date;
   theme?: TCalendarThemes;
@@ -66,9 +70,17 @@ export interface ICalendarProps {
   months?: string[];
   presistTimeOnDateChange?: boolean;
   style?: React.StyleHTMLAttributes<HTMLDivElement>;
-  onConfirm?: (newDate: Date) => void;
+  onConfirm?: (newDate: Date, fromDate?: Date) => void;
   onCancel?: () => void;
+  ranged?: RangedDate | true;
 }
+
+export interface IRangedCalendarProps
+  extends Omit<ICalendarProps, "onChange" | "onConfirm"> {
+  onChange?: (newDate: [Date, Date]) => void;
+  onConfirm?: (newDate: [Date, Date]) => void;
+}
+
 const FadeTransition = ({ children, bodyTransition, ...rest }: any) => (
   <Transition {...rest}>
     {(state) => {
@@ -161,6 +173,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
       ],
       onCancel,
       onConfirm,
+      ranged,
     },
     ref
   ) => {
@@ -191,11 +204,27 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
       });
     }, [hour, minute]);
 
+    const updateCurrentRange = (day: Date) => {
+      const updateCurrentRangeProperty = (property: Partial<RangedDate>) =>
+        setCurrentRange((previousRange) => ({ ...previousRange, ...property }));
+
+      // Only keep from and remove all other properties
+      if (currentRange?.to) return setCurrentRange({ from: day });
+
+      if (!currentRange?.from) return updateCurrentRangeProperty({ from: day });
+
+      if (day > currentRange.from)
+        return updateCurrentRangeProperty({ to: day });
+
+      updateCurrentRangeProperty({ from: day });
+    };
+
     const activeDayChangeHandler = (day: Date) => {
       const dayCopy = new Date(day);
       if (presistTimeOnDateChange) {
         dayCopy.setHours(hour, minute, 0, 0);
       } else dayCopy.setHours(0, 0, 0);
+      if (ranged) updateCurrentRange(dayCopy);
       setActiveDate(dayCopy);
     };
 
@@ -230,9 +259,13 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
       setActiveBody("main");
     };
 
+    const [currentRange, setCurrentRange] = useState<RangedDate>(
+      ranged === true ? {} : ranged || {}
+    );
+
     useEffect(() => {
       setSelectedDate(activeDate);
-      onChange?.(activeDate);
+      onChange?.(activeDate, currentRange?.from);
     }, [activeDate]);
 
     useEffect(() => {
@@ -252,6 +285,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
       switch (theme) {
         case "light":
           return {
+            hoverBackgroundColor: "#000",
             bodyBackgroundColor: "#fff",
             chevronLeftColor: "#6b7280",
             chevronRightColor: "#6b7280",
@@ -273,6 +307,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
           };
         case "dark":
           return {
+            hoverBackgroundColor: "#ffffff",
             bodyBackgroundColor: "#1c1917",
             chevronLeftColor: "#e7e5e4",
             chevronRightColor: "#e7e5e4",
@@ -301,6 +336,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
           };
         case "darkRed":
           return {
+            hoverBackgroundColor: "#ffffff",
             bodyBackgroundColor: "#1c1917",
             chevronLeftColor: "#e7e5e4",
             chevronRightColor: "#e7e5e4",
@@ -353,6 +389,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
           selectedDate={selectedDate}
           themeClasses={themeClasses}
           showFridaysAsRed={showFridaysAsRed}
+          range={currentRange}
         />
       ) : activeBody === "months" ? (
         <MonthsBody
@@ -394,6 +431,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
           showGoToToday={minDate ? compareMinDate() : showGoToToday}
           months={months}
           themeClasses={themeClasses}
+          range={ranged ? currentRange : undefined}
         />
         {mode === "date" ? (
           <div
@@ -453,7 +491,7 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
         {showFooter && (
           <Footer
             themeClasses={themeClasses}
-            onConfirm={() => onConfirm?.(activeDate)}
+            onConfirm={() => onConfirm?.(activeDate, currentRange?.from)}
             onCancel={onCancel}
             showTimePicker={showTimePicker}
             mode={mode}
@@ -464,3 +502,5 @@ export const Calendar = forwardRef<HTMLDivElement, ICalendarProps>(
     );
   }
 );
+
+Calendar.displayName = "Calendar";
