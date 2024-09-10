@@ -173,6 +173,7 @@ const MainBody = ({
 
           return (
             <div
+              key={day}
               className={classNames(
                 "flex items-center justify-center w-9 h-9 relative p-0 m-0",
                 rounded()
